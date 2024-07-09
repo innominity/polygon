@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RunnerConfig(AppConfig):
+class RemoteAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'runner'
+    name = 'remote_app'
