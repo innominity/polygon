@@ -3,12 +3,18 @@ from django.template.defaultfilters import slugify  # new
 import uuid
 
 
+def upload_app_zip(instance, filename, **kwargs):
+    return "/".join(["app_zip", str(instance.guid), f"{instance.name}.zip"])
+
+
 class RemoteApp(models.Model):
 
+    guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=128)
     description = models.TextField()
     slug = models.SlugField(null=False, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    app_zip = models.FileField()
 
     class Meta:
         verbose_name = "Удаленное ПО на сервере"
@@ -66,7 +72,6 @@ class RemoteAppTaskFileConfig(models.Model):
     guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     config_type = models.ForeignKey(RemoteAppFileConfigType, on_delete=models.CASCADE)
     config_file = models.FileField(upload_to=config_file_upload, blank=True, null=True)
-
 
     class Meta:
         verbose_name = "Конфигурация экземпляра запуска удаленного ПО"
