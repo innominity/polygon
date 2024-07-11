@@ -1,3 +1,31 @@
 from django.contrib import admin
+from .models import RemoteApp, RemoteAppFileConfigType, RemoteAppTask, RemoteAppTaskFileConfig
 
-# Register your models here.
+
+class RemoteAppAdmin(admin.ModelAdmin):
+    list_display = []
+    list_display_links = []
+    search_fields = []
+
+admin.site.register(RemoteApp, RemoteAppAdmin)
+
+class RemoteAppFileConfigTypeAdmin(admin.ModelAdmin):
+    list_display = []
+    list_display_links = []
+    search_fields = []
+
+admin.site.register(RemoteAppFileConfigType, RemoteAppFileConfigTypeAdmin)
+
+class RemoteAppTaskAdmin(admin.ModelAdmin):
+    list_display = []
+    list_display_links = []
+    search_fields = []
+
+admin.site.register(RemoteAppTask, RemoteAppTaskAdmin)
+
+class RemoteAppTaskFileConfigAdmin(admin.ModelAdmin):
+    list_display = []
+    list_display_links = []
+    search_fields = []
+
+admin.site.register(RemoteAppTaskFileConfig, RemoteAppTaskFileConfigAdmin)
