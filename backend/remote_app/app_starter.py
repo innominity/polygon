@@ -1,4 +1,4 @@
-from .models import 
+from .models import RemoteApp, RemoteAppFileConfigType, RemoteAppTask, RemoteAppTaskFileConfig
 
 class RemoteAppBase:
     """Базовый класс для обертки над функциональностью программы
@@ -8,7 +8,7 @@ class RemoteAppBase:
         self.__config = {}
 
     def run(self):
-        """Основной метод запсука программы на выполнение
+        """Основной метод запуcка программы на выполнение
         """
         pass
 
@@ -26,11 +26,16 @@ class RemoteAppTaskStarter:
     """
     
     def __init__(self, remote_app_guid):
-        self.__remote_app_guid = remote_app_guid
-        self.__create_app_task()
+        self.__app_guid = remote_app_guid
+        self.__task_guid = self.__create_app_task(remote_app_guid)
 
     def __create_app_task(self, remote_app_guid):
-        pass
+        remote_app = RemoteApp.objects.get(guid=remote_app_guid)
+        remote_app_task = RemoteAppTask(remote_app=remote_app, status=RemoteAppTask.TaskStatus.NOT_STARTED)
+        remote_app_task.save()
+        return remote_app_task.guid
 
     def __create_app_subfoldler(self):
         pass
+
+    

@@ -16,9 +16,12 @@ class RemoteApp(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     app_zip = models.FileField()
 
+    def __str__(self) -> str:
+        return f"{self.name} - ({self.guid})" 
+
     class Meta:
-        verbose_name = "Удаленное ПО на сервере"
-        verbose_name_plural = "Удаленные ПО на сервере"
+        verbose_name = "Программное обеспечение на сервере"
+        verbose_name_plural = "Программное обеспечение на сервере"
         ordering = ["-date_created"]
 
     def save(self, *args, **kwargs):  # new
@@ -34,20 +37,23 @@ class RemoteAppFileConfigType(models.Model):
     is_required = models.BooleanField(default=True)
     file_path = models.FilePathField()
 
+    def __str__(self) -> str:
+        return self.name
+
     class Meta:
-        verbose_name = "Тип конфигурации удаленного ПО на сервере"
-        verbose_name_plural = "Типы конфигураций удаленного ПО на сервере"
+        verbose_name = "Тип конфигурации программного обеспечения на сервере"
+        verbose_name_plural = "Типы конфигураций программного обеспечения ПО на сервере"
         ordering = ["pk"]
 
 
 class RemoteAppTask(models.Model):
 
     class TaskStatus(models.IntegerChoices):
-        PENDING = 1
-        STARTED = 2
-        RUNNING = 3
-        SUCCESS = 4
-        ERROR = 5
+        NOT_STARTED = 1 # Еще не запускалась
+        PENDING = 2     # В очереди на запуск
+        PROCESSING = 3  # Запущена и обрабатывается
+        SUCCESS = 4     # Успешно выполнена
+        ERROR = 5       # Ошибка выполнения
 
     guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     remote_app = models.ForeignKey(RemoteApp, on_delete=models.CASCADE)
@@ -58,13 +64,13 @@ class RemoteAppTask(models.Model):
     status_update = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Задача исполнения удаленного ПО"
-        verbose_name_plural = "Задачи исполнения удаленного ПО"
+        verbose_name = "Задача исполнения программного обеспечения"
+        verbose_name_plural = "Задачи исполнения программного обеспечения"
         ordering = ["-date_created"]
 
 
 def config_file_upload(instance, filename, **kwargs):
-    return "/".join(["config_files", str(instance.guid), "orig", filename])
+    return "/".join(["config_files", str(instance.guid), filename])
 
 
 class RemoteAppTaskFileConfig(models.Model):
@@ -72,7 +78,8 @@ class RemoteAppTaskFileConfig(models.Model):
     guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     config_type = models.ForeignKey(RemoteAppFileConfigType, on_delete=models.CASCADE)
     config_file = models.FileField(upload_to=config_file_upload, blank=True, null=True)
+    remote_app_task = models.ForeignKey(RemoteAppTask, )
 
     class Meta:
-        verbose_name = "Конфигурация экземпляра запуска удаленного ПО"
-        verbose_name_plural = "Конфигурации экземпляров запуска удаленного ПО"
+        verbose_name = "Конфигурация экземпляра запуска программного обеспечения"
+        verbose_name_plural = "Конфигурации экземпляров запуска программного обеспечения"

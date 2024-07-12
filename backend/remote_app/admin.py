@@ -3,9 +3,9 @@ from .models import RemoteApp, RemoteAppFileConfigType, RemoteAppTask, RemoteApp
 
 
 class RemoteAppAdmin(admin.ModelAdmin):
-    list_display = []
-    list_display_links = []
-    search_fields = []
+    list_display = ["guid", "name", "description", "slug", "date_created"]
+    list_display_links = ["guid", "name", "slug"]
+    search_fields = ["guid", "name", "slug"]
 
 admin.site.register(RemoteApp, RemoteAppAdmin)
 
