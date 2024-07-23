@@ -1,5 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify  # new
+import os
 import uuid
 
 
@@ -78,8 +79,14 @@ class RemoteAppTaskFileConfig(models.Model):
     guid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     config_type = models.ForeignKey(RemoteAppFileConfigType, on_delete=models.CASCADE)
     config_file = models.FileField(upload_to=config_file_upload, blank=True, null=True)
-    remote_app_task = models.ForeignKey(RemoteAppTask, )
+    remote_app_task = models.ForeignKey(RemoteAppTask, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = "Конфигурация экземпляра запуска программного обеспечения"
         verbose_name_plural = "Конфигурации экземпляров запуска программного обеспечения"
+
+    def config_filename(self):
+        if self.config_file:
+            return os.path.basename(self.config_file.name) 
+        return ''
+
