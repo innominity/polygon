@@ -51,6 +51,21 @@ class RemoteAppFileConfigType(models.Model):
         verbose_name_plural = "Типы конфигураций программного обеспечения ПО на сервере"
         ordering = ["pk"]
 
+class FileConfigTypeReplaceParam(models.Model):
+
+    tag = models.CharField(max_length=10)
+    description = models.CharField(max_length=512)
+    file_config = models.ForeignKey(RemoteAppFileConfigType, on_delete=models.CASCADE)
+    default = models.CharField(max_length=256, blank=True, default="")
+
+    def __str__(self) -> str:
+        return self.tag
+    
+    class Meta:
+        verbose_name = "Параметр автозамены внутри конфигурационного файла"
+        verbose_name_plural = "Параметры автозамены внутри конфигурационного файла"
+        ordering = ["-pk"]
+
 
 class RemoteAppTask(models.Model):
 

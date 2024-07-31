@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RemoteApp, RemoteAppFileConfigType, RemoteAppTask, RemoteAppTaskFileConfig
+from .models import RemoteApp, RemoteAppFileConfigType, RemoteAppTask, RemoteAppTaskFileConfig, FileConfigTypeReplaceParam
 
 
 class RemoteAppAdmin(admin.ModelAdmin):
@@ -29,3 +29,10 @@ class RemoteAppTaskFileConfigAdmin(admin.ModelAdmin):
     search_fields = []
 
 admin.site.register(RemoteAppTaskFileConfig, RemoteAppTaskFileConfigAdmin)
+
+class FileConfigTypeReplaceParamAdmin(admin.ModelAdmin):
+    list_display = ["pk", "tag", "description", "file_config"]
+    list_display_links = ["pk", "tag"]
+    search_fields = []
+
+admin.site.register(FileConfigTypeReplaceParam, FileConfigTypeReplaceParamAdmin)
